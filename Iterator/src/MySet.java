@@ -1,34 +1,45 @@
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/*
+    @author: Hector Flores e Irvin Mundo
+    @matricula: A01333126 && A01333820
+    @referencias: https://sourcemaking.com/design_patterns/
+ */
+
+//Implementación del iterator, como se puede notar tu existe ninguna interface que marque un esqueleto
 public class MySet {
     private Hashtable ht = new Hashtable();
 
-    // 1. Design an internal "iterator" class for the "collection" class
-    public static class Iterator{
+    // 1. Diseña el iterador
+    public static class Iteratoret{
         private MySet set;
         private Enumeration e;
         private Integer current;
 
-        public Iterator(MySet in) {
+        //Constructor
+        public Iteratoret(MySet in) {
             set = in;
         }
 
+        //Devuelve el primer elemento
         public void first() {
             e = set.ht.keys();
             next();
         }
 
+        //Termino de iterar?
         public boolean isDone() {
             return current == null;
         }
 
+        //Devuelve el elemento actual
         public int currentItem() {
             return current;
         }
 
+        //Devuelve el siguiente elemento
         public void  next() {
             try {
                 current = (Integer)e.nextElement();
@@ -38,20 +49,23 @@ public class MySet {
         }
     }
 
+    //Agregar elemento
     public void add(int in) {
         ht.put(in, "null");
     }
 
+    //Es un miembro de
     public boolean isMember(int i) {
         return ht.containsKey(i);
     }
 
+    //Retorna los elementos restantes
     public Hashtable getHashtable() {
         return ht;
     }
 
-    // 2. Add a createIterator() member to the collection class
-    public Iterator createIterator()  {
-        return new Iterator(this);
+    // Iterador que se encargara de recorrer los elementos
+    public Iteratoret createIterator()  {
+        return new Iteratoret(this);
     }
 }

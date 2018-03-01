@@ -5,20 +5,29 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 
+/*
+    @author: Hector Flores e Irvin Mundo
+    @matricula: A01333126 && A01333820
+    @referencias: https://sourcemaking.com/design_patterns/
+ */
+
+//Crea el adaptador que hace la conversión entre BSON Document y AWS Item
 public class ItemMapperAdapter {
 
     private final AWSItem articulo;
 
+    //Constructor
     public ItemMapperAdapter(Item item) {
         this.articulo=new AWSItem(item);
     }
 
+    //LLamada incial, acepta el contendor de MongoBSON
     public Item convertBSON(MongoBSON doc){
         articulo.setItem(convertDoc(doc.getDocument()));
         return articulo.getItem();
     }
 
-    // Identify the desired interface
+    //Implementación del convertidor, hay que evaluar todos los posibles objetos del BSON y es llamada recursiva
     private Item convertDoc(Document doc){
         Item item = articulo.getItem();
         for(Map.Entry<String,Object> value:doc.entrySet()){
@@ -42,7 +51,9 @@ public class ItemMapperAdapter {
                     //noinspection unchecked
                     item.withMap(value.getKey(),(Map<String,?>) value.getValue());
                 }else if(value.getValue() instanceof Document){
+                    //Llamada para devolver un Documento en caso de que exista una profundidad
                     Item temp = convertDoc((Document) value.getValue());
+                    //Convierte el nivel actual a Mapa
                     item.withMap(value.getKey(), castItem(temp));
                 }
             }
@@ -50,6 +61,7 @@ public class ItemMapperAdapter {
         return item;
     }
 
+    //En caso de que se le pasa un Item y convierte los valores en un mapa para leerse mejor
     private Map<String,Object> castItem(Item item){
         Map<String, Object> mapa = new HashMap<>();
         for(Map.Entry<String, Object> valor : item.asMap().entrySet()){

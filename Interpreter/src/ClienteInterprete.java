@@ -8,10 +8,9 @@ public class ClienteInterprete {
 
 	public String interprete(String str){
 		Expresion exp = null;
-		//create rules for expressions
 		if(str.contains("Hexadecimal")){
 			exp=new AHexadecimal(Integer.parseInt(str.substring(0,str.indexOf(" "))));
-		}else if(str.contains("Binary")){
+		}else if(str.contains("Binario")){
 			exp=new ABinario(Integer.parseInt(str.substring(0,str.indexOf(" "))));
 		}else return str;
 
